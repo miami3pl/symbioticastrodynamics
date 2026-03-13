@@ -39,6 +39,18 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
 
+    <!-- Critical inline styles for FOUC prevention + scroll progress -->
+    <style>
+        body.loading { opacity: 0; }
+        body.loaded { opacity: 1; transition: opacity 0.4s ease; }
+        .skip-link { position: absolute; top: -100%; left: 16px; z-index: 10000; padding: 12px 24px; background: #3b82f6; color: #fff; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 14px; }
+        .skip-link:focus { top: 16px; }
+        .scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #3b82f6, #06b6d4); z-index: 10001; width: 0%; transition: none; pointer-events: none; }
+        .back-to-top { position: fixed; bottom: 32px; right: 32px; width: 48px; height: 48px; border-radius: 50%; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); backdrop-filter: blur(12px); color: #60a5fa; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(20px); transition: opacity 0.3s, transform 0.3s, background 0.3s, box-shadow 0.3s; z-index: 999; }
+        .back-to-top.visible { opacity: 1; transform: translateY(0); }
+        .back-to-top:hover { background: rgba(59, 130, 246, 0.25); box-shadow: 0 0 30px rgba(59, 130, 246, 0.3); }
+    </style>
+
     <!-- Theme Color -->
     <meta name="theme-color" content="#0a0a0f">
     <meta name="msapplication-TileColor" content="#0a0a0f">
@@ -138,8 +150,14 @@
     }
     </script>
 </head>
-<body>
-    <nav class="nav">
+<body class="loading">
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <!-- Skip to Content (Accessibility) -->
+    <a href="#vision" class="skip-link">Skip to main content</a>
+
+    <nav class="nav" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
             <a href="#" class="logo">
                 <img src="icons/logo.png" alt="Symbiotic Fluid & Astrodynamics" class="logo-image">
@@ -152,7 +170,7 @@
                 <a href="#research">Research</a>
                 <a href="#contact" class="nav-cta">Inquire</a>
             </div>
-            <button class="mobile-menu" aria-label="Menu">
+            <button class="mobile-menu" aria-label="Toggle navigation menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -203,32 +221,32 @@
             <!-- 3D Element Cube -->
             <div class="element-cube-container">
                 <div class="element-cube">
-                    <div class="cube-face cube-front" data-element="iron">
+                    <div class="cube-face cube-front" data-element="iron" tabindex="0" role="button" aria-label="Iron (Fe) - Element 26">
                         <span class="cube-symbol">Fe</span>
                         <span class="cube-number">26</span>
                         <span class="cube-name">Iron</span>
                     </div>
-                    <div class="cube-face cube-back" data-element="gold">
+                    <div class="cube-face cube-back" data-element="gold" tabindex="0" role="button" aria-label="Gold (Au) - Element 79">
                         <span class="cube-symbol">Au</span>
                         <span class="cube-number">79</span>
                         <span class="cube-name">Gold</span>
                     </div>
-                    <div class="cube-face cube-right" data-element="copper">
+                    <div class="cube-face cube-right" data-element="copper" tabindex="0" role="button" aria-label="Copper (Cu) - Element 29">
                         <span class="cube-symbol">Cu</span>
                         <span class="cube-number">29</span>
                         <span class="cube-name">Copper</span>
                     </div>
-                    <div class="cube-face cube-left" data-element="platinum">
+                    <div class="cube-face cube-left" data-element="platinum" tabindex="0" role="button" aria-label="Platinum (Pt) - Element 78">
                         <span class="cube-symbol">Pt</span>
                         <span class="cube-number">78</span>
                         <span class="cube-name">Platinum</span>
                     </div>
-                    <div class="cube-face cube-top" data-element="titanium">
+                    <div class="cube-face cube-top" data-element="titanium" tabindex="0" role="button" aria-label="Titanium (Ti) - Element 22">
                         <span class="cube-symbol">Ti</span>
                         <span class="cube-number">22</span>
                         <span class="cube-name">Titanium</span>
                     </div>
-                    <div class="cube-face cube-bottom" data-element="cobalt">
+                    <div class="cube-face cube-bottom" data-element="cobalt" tabindex="0" role="button" aria-label="Cobalt (Co) - Element 27">
                         <span class="cube-symbol">Co</span>
                         <span class="cube-number">27</span>
                         <span class="cube-name">Cobalt</span>
@@ -1209,18 +1227,18 @@
                         </div>
                     </div>
                 </div>
-                <form class="contact-form" action="https://formspree.io/f/your-form-id" method="POST">
+                <form class="contact-form" action="mailto:yuri@symbioticastrodynamics.com" method="POST" enctype="text/plain">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required>
+                        <input type="text" id="name" name="name" required autocomplete="name">
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" required autocomplete="email">
                     </div>
                     <div class="form-group">
                         <label for="company">Organization</label>
-                        <input type="text" id="company" name="company">
+                        <input type="text" id="company" name="company" autocomplete="organization">
                     </div>
                     <div class="form-group">
                         <label for="inquiry">Nature of Inquiry</label>
@@ -1229,6 +1247,8 @@
                             <option value="partnership">Strategic Partnership</option>
                             <option value="investment">Investment</option>
                             <option value="licensing">Technology Licensing</option>
+                            <option value="academic">Academic Partnership</option>
+                            <option value="defense">Defense / Government</option>
                             <option value="other">Other</option>
                         </select>
                     </div>
@@ -1249,10 +1269,17 @@
                     <img src="icons/logo.png" alt="Symbiotic Fluid & Astrodynamics" class="footer-logo">
                 </div>
                 <p class="footer-tagline">Revolutionary propulsion. Zero conventional fuel. Physics-based reliability.</p>
-                <p class="footer-copy">&copy; 2025 Symbiotic Fluid & Astrodynamics. All rights reserved.</p>
+                <p class="footer-copy">&copy; 2025&ndash;2026 Symbiotic Fluid & Astrodynamics. All rights reserved.</p>
             </div>
         </div>
     </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" aria-label="Back to top" title="Back to top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"/>
+        </svg>
+    </button>
 
     <script src="script.js"></script>
 </body>
