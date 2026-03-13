@@ -155,11 +155,11 @@
     <div class="scroll-progress" aria-hidden="true"></div>
 
     <!-- Skip to Content (Accessibility) -->
-    <a href="#vision" class="skip-link">Skip to main content</a>
+    <a href="#vision" class="skip-link" id="skip-link">Skip to main content</a>
 
     <nav class="nav" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
-            <a href="#" class="logo">
+            <a href="/" class="logo" aria-label="Symbiotic Fluid & Astrodynamics — Home">
                 <img src="icons/logo.png" alt="Symbiotic Fluid & Astrodynamics" class="logo-image">
             </a>
             <div class="nav-links">
@@ -178,6 +178,7 @@
         </div>
     </nav>
 
+    <main>
     <header class="hero">
         <div class="hero-bg"></div>
         <div class="hero-content hero-content-expanded">
@@ -271,7 +272,7 @@
                 <!-- Nucleus with proton count -->
                 <div class="nucleus">
                     <div class="magnetic-core"></div>
-                    <span class="nucleus-label"></span>
+                    <span class="nucleus-label" aria-live="polite"></span>
                 </div>
 
                 <!-- Dynamic Electron Shells - will be populated by JS -->
@@ -308,7 +309,7 @@
                             </svg>
                         </div>
                         <div class="capability-text">
-                            <h4>Quantum-Level Accuracy</h4>
+                            <h3>Quantum-Level Accuracy</h3>
                             <p>Classical geometric framework matching quantum mechanical predictions</p>
                         </div>
                     </div>
@@ -319,7 +320,7 @@
                             </svg>
                         </div>
                         <div class="capability-text">
-                            <h4>Instant Computation</h4>
+                            <h3>Instant Computation</h3>
                             <p>Hours of simulation reduced to milliseconds of calculation</p>
                         </div>
                     </div>
@@ -332,7 +333,7 @@
                             </svg>
                         </div>
                         <div class="capability-text">
-                            <h4>Materials Discovery</h4>
+                            <h3>Materials Discovery</h3>
                             <p>Predictive framework unlocking unexplored atomic configurations</p>
                         </div>
                     </div>
@@ -346,7 +347,7 @@
                             </svg>
                         </div>
                         <div class="capability-text">
-                            <h4>Exceptional Configurations</h4>
+                            <h3>Exceptional Configurations</h3>
                             <p>Identification of atoms with extraordinary chemical properties</p>
                         </div>
                     </div>
@@ -374,7 +375,7 @@
                 <div class="founder-card">
                     <div class="founder-content">
                         <p class="founder-label">Leadership</p>
-                        <h4>Yuri Petrini</h4>
+                        <h3>Yuri Petrini</h3>
                         <p class="founder-title">Founder & Chief Scientist</p>
                         <p class="founder-expertise">Fluid Mechanics & Astrodynamics Specialist<br>Rotational Systems & Field Dynamics</p>
                     </div>
@@ -407,7 +408,7 @@
                         </svg>
                     </div>
                     <div class="mission-text">
-                        <h4>Astrodynamics for Earth</h4>
+                        <h3>Astrodynamics for Earth</h3>
                         <p>Together, we aim to push the boundaries of what's possible—translating astrodynamic principles developed for space into revolutionary intra-Earth applications. Technologies designed for the cosmos, engineered for the atmosphere.</p>
                     </div>
                 </div>
@@ -933,7 +934,7 @@
                                 <circle cx="12" cy="12" r="2"/>
                             </svg>
                         </div>
-                        <h4>Exotic Phase States</h4>
+                        <h3>Exotic Phase States</h3>
                         <p>Investigation of non-equilibrium phases, metastable states, and novel matter configurations beyond conventional solid-liquid-gas transitions.</p>
                     </div>
                     <div class="material-card">
@@ -943,7 +944,7 @@
                                 <circle cx="12" cy="12" r="4"/>
                             </svg>
                         </div>
-                        <h4>Advanced Alloy Development</h4>
+                        <h3>Advanced Alloy Development</h3>
                         <p>Proprietary alloy formulations with enhanced electromagnetic, thermal, and structural properties for extreme environments.</p>
                     </div>
                     <div class="material-card">
@@ -954,7 +955,7 @@
                                 <path d="M4 12h5M15 12h5M12 4v5M12 15v5"/>
                             </svg>
                         </div>
-                        <h4>Magnetohydrodynamics (MHD)</h4>
+                        <h3>Magnetohydrodynamics (MHD)</h3>
                         <p>Advanced MHD systems for plasma control, conductive fluid manipulation, and novel propulsion architectures.</p>
                     </div>
                     <div class="material-card">
@@ -966,7 +967,7 @@
                                 <path d="M4 7v10"/>
                             </svg>
                         </div>
-                        <h4>Phase Transition Engineering</h4>
+                        <h3>Phase Transition Engineering</h3>
                         <p>Controlled phase manipulation for energy storage, thermal management, and dynamic material properties.</p>
                     </div>
                     <div class="material-card">
@@ -980,7 +981,7 @@
                                 <path d="M12 6v5M12 13v5M6 12h5M13 12h5"/>
                             </svg>
                         </div>
-                        <h4>Atomic Restructuring</h4>
+                        <h3>Atomic Restructuring</h3>
                         <p>Precision atomic-scale modification techniques for creating materials with engineered crystalline structures and properties.</p>
                     </div>
                     <div class="material-card">
@@ -990,7 +991,7 @@
                                 <path d="M12 3v18"/>
                             </svg>
                         </div>
-                        <h4>Gaseous & Plasma States</h4>
+                        <h3>Gaseous & Plasma States</h3>
                         <p>Research into ionized gases, plasma dynamics, and gaseous phase materials for propulsion and energy applications.</p>
                     </div>
                 </div>
@@ -1038,15 +1039,15 @@
                 </div>
                 <div class="research-areas">
                     <div class="research-card">
-                        <h4>Telluric & Geomagnetic Studies</h4>
+                        <h3>Telluric & Geomagnetic Studies</h3>
                         <p>Investigation of Earth-current phenomena, natural electromagnetic field variations, and their applications in sensing and energy systems.</p>
                     </div>
                     <div class="research-card">
-                        <h4>Microbial Electrochemistry</h4>
+                        <h3>Microbial Electrochemistry</h3>
                         <p>Research into electroactive microorganisms, bioelectric energy generation, and electrogenic bacteria native to Gulf Coast ecosystems.</p>
                     </div>
                     <div class="research-card">
-                        <h4>Atmospheric Electrical Phenomena</h4>
+                        <h3>Atmospheric Electrical Phenomena</h3>
                         <p>Study of regional atmospheric conditions, charge dynamics, and natural electrical gradients for novel applications.</p>
                     </div>
                 </div>
@@ -1079,7 +1080,7 @@
                                 <path d="M12 4v4M12 16v4"/>
                             </svg>
                         </div>
-                        <h4>Vertical Geoelectric Field Measurements</h4>
+                        <h3>Vertical Geoelectric Field Measurements</h3>
                         <p>Proprietary electrode array configurations for measuring potential differences at variable depths. Our vertical profiling techniques detect telluric current flow patterns invisible to conventional horizontal surveys.</p>
                         <span class="data-tag">Unpublished methodology</span>
                     </div>
@@ -1093,7 +1094,7 @@
                                 <circle cx="12" cy="12" r="2"/>
                             </svg>
                         </div>
-                        <h4>Telluric Current Dynamics</h4>
+                        <h3>Telluric Current Dynamics</h3>
                         <p>Continuous monitoring of natural Earth currents induced by geomagnetic variations, solar activity, and oceanic tidal movements. Gulf Coast positioning provides unique access to continental-oceanic current interfaces.</p>
                         <span class="data-tag">Continuous data collection since 2023</span>
                     </div>
@@ -1104,7 +1105,7 @@
                                 <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                             </svg>
                         </div>
-                        <h4>Magnetotelluric Profiling</h4>
+                        <h3>Magnetotelluric Profiling</h3>
                         <p>Advanced MT surveys mapping subsurface conductivity structures. Correlation of electromagnetic impedance with regional geological and hydrological features.</p>
                     </div>
 
@@ -1116,7 +1117,7 @@
                                 <path d="M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>
                             </svg>
                         </div>
-                        <h4>Geomagnetic Storm Response</h4>
+                        <h3>Geomagnetic Storm Response</h3>
                         <p>Real-time monitoring of induced currents during solar events. Proprietary predictive models for geomagnetically induced current (GIC) forecasting.</p>
                     </div>
 
@@ -1128,7 +1129,7 @@
                                 <circle cx="12" cy="12" r="5"/>
                             </svg>
                         </div>
-                        <h4>Schumann Resonance Studies</h4>
+                        <h3>Schumann Resonance Studies</h3>
                         <p>Investigation of Earth-ionosphere cavity resonances and their interaction with local geoelectric phenomena. Correlation with atmospheric electrical conditions.</p>
                     </div>
 
@@ -1140,7 +1141,7 @@
                                 <path d="M6 8h.01M6 12h.01M10 8h8M10 12h8"/>
                             </svg>
                         </div>
-                        <h4>Subsurface Conductivity Mapping</h4>
+                        <h3>Subsurface Conductivity Mapping</h3>
                         <p>High-resolution imaging of aquifer systems, fault structures, and ore body locations through natural-source electromagnetic methods.</p>
                     </div>
                 </div>
@@ -1151,7 +1152,7 @@
                             <rect x="3" y="11" width="18" height="11" rx="2"/>
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                         </svg>
-                        <h4>Preliminary Findings Under Review</h4>
+                        <h3>Preliminary Findings Under Review</h3>
                     </div>
                     <p>Our ongoing research has produced significant preliminary data that may redefine understanding of regional geoelectric phenomena. These findings are currently under internal review pending peer-reviewed publication.</p>
                     <ul class="findings-list">
@@ -1182,7 +1183,7 @@
                     </div>
                 </div>
                 <div class="academic-contact">
-                    <h4>Research Inquiries</h4>
+                    <h3>Research Inquiries</h3>
                     <p>For academic partnership proposals, joint research opportunities, and institutional collaborations:</p>
                     <a href="mailto:research@symbioticastrodynamics.com" class="contact-link research-email">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -1261,6 +1262,8 @@
             </div>
         </div>
     </section>
+
+    </main>
 
     <footer class="footer">
         <div class="container">

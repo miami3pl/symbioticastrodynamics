@@ -7,6 +7,20 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add("loaded");
   });
 
+  // Throttle utility for scroll handlers
+  function throttle(fn, wait) {
+    let last = 0;
+    let raf = null;
+    return function () {
+      const now = performance.now();
+      if (now - last >= wait) {
+        last = now;
+        if (raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(fn);
+      }
+    };
+  }
+
   // Scroll progress indicator
   const scrollProgress = document.querySelector(".scroll-progress");
   if (scrollProgress) {
@@ -17,7 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
       scrollProgress.style.width = progress + "%";
     };
-    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("scroll", throttle(updateProgress, 16), {
+      passive: true,
+    });
     updateProgress();
   }
 
@@ -31,7 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
         backToTop.classList.remove("visible");
       }
     };
-    window.addEventListener("scroll", toggleBackToTop, { passive: true });
+    window.addEventListener("scroll", throttle(toggleBackToTop, 100), {
+      passive: true,
+    });
     backToTop.addEventListener("click", () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -41,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const mobileMenu = document.querySelector(".mobile-menu");
   const navLinks = document.querySelector(".nav-links");
 
-  if (mobileMenu) {
+  if (mobileMenu && navLinks) {
     mobileMenu.addEventListener("click", () => {
       const isOpen = navLinks.classList.toggle("active");
       mobileMenu.classList.toggle("active");
@@ -70,77 +88,112 @@ document.addEventListener("DOMContentLoaded", () => {
           block: "start",
         });
         // Close mobile menu if open
-        navLinks.classList.remove("active");
-        mobileMenu.classList.remove("active");
+        if (navLinks) navLinks.classList.remove("active");
+        if (mobileMenu) mobileMenu.classList.remove("active");
       }
     });
   });
 
   // Navbar background on scroll
   const nav = document.querySelector(".nav");
-  let lastScroll = 0;
-
-  window.addEventListener("scroll", () => {
-    const currentScroll = window.pageYOffset;
-
-    if (currentScroll > 100) {
-      nav.style.background = "rgba(10, 10, 15, 0.95)";
-    } else {
-      nav.style.background = "rgba(10, 10, 15, 0.8)";
-    }
-
-    lastScroll = currentScroll;
-  });
-
-  // Active tab tracking based on scroll position
-  const sections = document.querySelectorAll(
-    "section[id], header[id], .section[id]",
-  );
-  const navLinksAll = document.querySelectorAll('.nav-links a[href^="#"]');
-
-  const sectionObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.getAttribute("id");
-          navLinksAll.forEach((link) => {
-            link.classList.remove("active");
-            if (link.getAttribute("href") === `#${id}`) {
-              link.classList.add("active");
-            }
-          });
-        }
-      });
-    },
-    { rootMargin: "-30% 0px -70% 0px" },
-  );
-
-  sections.forEach((section) => sectionObserver.observe(section));
-
-  // Intersection Observer for fade-in animations
-  const observerOptions = {
-    root: null,
-    rootMargin: "0px",
-    threshold: 0.1,
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
+  if (nav) {
+    const updateNavBg = () => {
+      const currentScroll = window.pageYOffset;
+      if (currentScroll > 100) {
+        nav.style.background = "rgba(10, 10, 15, 0.95)";
+      } else {
+        nav.style.background = "rgba(10, 10, 15, 0.8)";
       }
+    };
+    window.addEventListener("scroll", throttle(updateNavBg, 100), {
+      passive: true,
     });
-  }, observerOptions);
+  }
 
-  // Observe elements for animation
-  document
-    .querySelectorAll(".service-card, .stat, .capability-group")
-    .forEach((el) => {
-      el.style.opacity = "0";
-      el.style.transform = "translateY(20px)";
-      el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
-      observer.observe(el);
+  // IntersectionObserver feature gate
+  if ("IntersectionObserver" in window) {
+    // Active tab tracking based on scroll position
+    const sections = document.querySelectorAll(
+      "section[id], header[id], .section[id]",
+    );
+    const navLinksAll = document.querySelectorAll('.nav-links a[href^="#"]');
+
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute("id");
+            navLinksAll.forEach((link) => {
+              link.classList.remove("active");
+              if (link.getAttribute("href") === `#${id}`) {
+                link.classList.add("active");
+              }
+            });
+          }
+        });
+      },
+      { rootMargin: "-30% 0px -70% 0px" },
+    );
+
+    sections.forEach((section) => sectionObserver.observe(section));
+
+    // Intersection Observer for fade-in animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      { root: null, rootMargin: "0px", threshold: 0.1 },
+    );
+
+    // Observe elements for animation
+    document
+      .querySelectorAll(".service-card, .stat, .capability-group")
+      .forEach((el) => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(20px)";
+        el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+        observer.observe(el);
+      });
+
+    // Performance Optimization: Pause animations when not visible
+    const animatedSections = document.querySelectorAll(".hero, #vortex");
+
+    const animationObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const animatedElements = entry.target.querySelectorAll(
+            ".atom-wrapper, .orbit, .electron, .electron-shell, " +
+              ".vortex, .vortex-ring, .vortex-core, .particle, .flow-line, .obstacle-glow",
+          );
+
+          if (entry.isIntersecting) {
+            animatedElements.forEach((el) => {
+              el.style.animationPlayState = "running";
+            });
+            entry.target.classList.remove("animations-paused");
+          } else {
+            animatedElements.forEach((el) => {
+              el.style.animationPlayState = "paused";
+            });
+            entry.target.classList.add("animations-paused");
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "100px",
+        threshold: 0,
+      },
+    );
+
+    animatedSections.forEach((section) => {
+      if (section) animationObserver.observe(section);
     });
+  }
 
   // Add visible class styles
   const style = document.createElement("style");
@@ -212,14 +265,31 @@ document.addEventListener("DOMContentLoaded", () => {
   // Parallax effect on hero visual (subtle movement on mouse)
   // SAFEGUARDS: Clamp Y to prevent upward movement into nav
   const heroVisual = document.querySelector(".hero-visual");
-  if (heroVisual && window.innerWidth > 768) {
-    window.addEventListener("mousemove", (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 10;
-      // Clamp Y: only allow 0 to +10px (down), never negative (up)
-      const rawY = (e.clientY / window.innerHeight - 0.5) * 10;
-      const y = Math.max(0, rawY); // HARD CLAMP: never negative
-      heroVisual.style.transform = `translate(${x}px, ${y}px)`;
-    });
+  let parallaxEnabled = heroVisual && window.innerWidth > 768;
+  let parallaxHandler = null;
+
+  function setupParallax() {
+    if (parallaxHandler) {
+      window.removeEventListener("mousemove", parallaxHandler);
+      parallaxHandler = null;
+    }
+    parallaxEnabled = heroVisual && window.innerWidth > 768;
+    if (parallaxEnabled) {
+      parallaxHandler = (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 10;
+        const rawY = (e.clientY / window.innerHeight - 0.5) * 10;
+        const y = Math.max(0, rawY);
+        heroVisual.style.transform = `translate(${x}px, ${y}px)`;
+      };
+      window.addEventListener("mousemove", parallaxHandler);
+    } else if (heroVisual) {
+      heroVisual.style.transform = "";
+    }
+  }
+
+  if (heroVisual) {
+    setupParallax();
+    window.addEventListener("resize", setupParallax);
   }
 
   // Realistic Electron Configurations
@@ -228,7 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
       symbol: "Fe",
       number: 26,
       name: "Iron",
-      shells: [2, 8, 14, 2], // K, L, M, N shells
+      shells: [2, 8, 14, 2],
       color: "#f97316",
     },
     copper: {
@@ -242,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
       symbol: "Au",
       number: 79,
       name: "Gold",
-      shells: [2, 8, 18, 32, 18, 1], // 6 shells
+      shells: [2, 8, 18, 32, 18, 1],
       color: "#fcd34d",
     },
     titanium: {
@@ -256,7 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
       symbol: "Pt",
       number: 78,
       name: "Platinum",
-      shells: [2, 8, 18, 32, 17, 1], // 6 shells
+      shells: [2, 8, 18, 32, 17, 1],
       color: "#e2e8f0",
     },
     cobalt: {
@@ -275,7 +345,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const cubeContainer = document.querySelector(".element-cube-container");
   const modelTag = document.querySelector(".model-tag");
 
-  // Cube positions for variety
   const cubePositions = [
     "pos-top-left",
     "pos-top-right",
@@ -285,17 +354,20 @@ document.addEventListener("DOMContentLoaded", () => {
     "pos-center-left",
   ];
 
+  let shellTransitionTimeout = null;
+  let flashTimeout = null;
+
   function createElectronShells(elementKey) {
     if (!electronShellsContainer) return;
 
     const config = electronConfigs[elementKey];
 
-    // Fade out existing shells
     electronShellsContainer.style.opacity = "0";
     electronShellsContainer.style.transform =
       "translate(-50%, -50%) scale(0.8)";
 
-    setTimeout(() => {
+    if (shellTransitionTimeout) clearTimeout(shellTransitionTimeout);
+    shellTransitionTimeout = setTimeout(() => {
       electronShellsContainer.innerHTML = "";
 
       config.shells.forEach((electronCount, shellIndex) => {
@@ -303,7 +375,6 @@ document.addEventListener("DOMContentLoaded", () => {
         shell.className = `electron-shell shell-${shellIndex + 1}`;
         shell.style.borderColor = `${config.color}40`;
 
-        // Add electrons to this shell (max 8 visible for performance)
         const visibleElectrons = Math.min(electronCount, 8);
         for (let i = 0; i < visibleElectrons; i++) {
           const electron = document.createElement("div");
@@ -311,7 +382,6 @@ document.addEventListener("DOMContentLoaded", () => {
           electron.style.background = config.color;
           electron.style.boxShadow = `0 0 10px ${config.color}, 0 0 20px ${config.color}60`;
 
-          // Position electrons around the orbit
           const angle = (i / visibleElectrons) * 360;
           electron.style.transform = `rotate(${angle}deg) translateX(${(shellIndex + 1) * 25 + 15}px)`;
 
@@ -321,12 +391,10 @@ document.addEventListener("DOMContentLoaded", () => {
         electronShellsContainer.appendChild(shell);
       });
 
-      // Fade in new shells
       electronShellsContainer.style.opacity = "1";
       electronShellsContainer.style.transform =
         "translate(-50%, -50%) scale(1)";
 
-      // Update nucleus label
       if (nucleusLabel) {
         nucleusLabel.textContent = `${config.shells.length} shells · ${config.number} electrons`;
         nucleusLabel.style.color = config.color;
@@ -336,33 +404,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateCubePosition(index) {
     if (!cubeContainer) return;
-
-    // Remove all position classes
     cubePositions.forEach((pos) => cubeContainer.classList.remove(pos));
-
-    // Add new position class
     cubeContainer.classList.add(cubePositions[index % cubePositions.length]);
   }
 
   function setActiveElement(elementKey, index = 0) {
     if (!atomContainer) return;
 
-    // Flash effect on atom container
     atomContainer.style.filter = "brightness(1.5)";
-    setTimeout(() => {
+    if (flashTimeout) clearTimeout(flashTimeout);
+    flashTimeout = setTimeout(() => {
       atomContainer.style.filter = "brightness(1)";
     }, 200);
 
-    // Update atom colors
     atomContainer.setAttribute("data-element", elementKey);
-
-    // Create electron shells with transition
     createElectronShells(elementKey);
-
-    // Update cube position
     updateCubePosition(index);
 
-    // Update active cube face
     cubeFaces.forEach((face) => {
       if (face.getAttribute("data-element") === elementKey) {
         face.classList.add("active");
@@ -371,7 +429,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Update model tag color
     if (modelTag) {
       const config = electronConfigs[elementKey];
       modelTag.style.borderColor = `${config.color}50`;
@@ -380,7 +437,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Cube rotation syncs with element changes
   const cubeRotationOrder = [
     "iron",
     "copper",
@@ -390,6 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "cobalt",
   ];
   let currentElementIndex = 0;
+  let cycleInterval = null;
 
   function cycleWithCube() {
     currentElementIndex = (currentElementIndex + 1) % cubeRotationOrder.length;
@@ -399,7 +456,6 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // Click/keyboard on cube face to change element
   cubeFaces.forEach((face) => {
     const activateFace = () => {
       const elementKey = face.getAttribute("data-element");
@@ -415,55 +471,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Initialize and cycle every 4 seconds (synced with cube rotation)
   if (atomContainer) {
-    // Add transition styles to electron shells container
     if (electronShellsContainer) {
       electronShellsContainer.style.transition =
         "opacity 0.3s ease, transform 0.3s ease";
     }
-    if (atomContainer) {
-      atomContainer.style.transition = "filter 0.2s ease";
-    }
+    atomContainer.style.transition = "filter 0.2s ease";
 
     setActiveElement("iron", 0);
-    setInterval(cycleWithCube, 4000);
+    cycleInterval = setInterval(cycleWithCube, 4000);
+
+    // Clean up interval on page unload
+    window.addEventListener("pagehide", () => {
+      if (cycleInterval) clearInterval(cycleInterval);
+      if (shellTransitionTimeout) clearTimeout(shellTransitionTimeout);
+      if (flashTimeout) clearTimeout(flashTimeout);
+    });
   }
-
-  // Performance Optimization: Pause animations when not visible
-  const animatedSections = document.querySelectorAll(".hero, #vortex");
-
-  const animationObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        const animatedElements = entry.target.querySelectorAll(
-          ".atom-wrapper, .orbit, .electron, .electron-shell, " +
-            ".vortex, .vortex-ring, .vortex-core, .particle, .flow-line, .obstacle-glow",
-        );
-
-        if (entry.isIntersecting) {
-          // Resume animations when visible
-          animatedElements.forEach((el) => {
-            el.style.animationPlayState = "running";
-          });
-          entry.target.classList.remove("animations-paused");
-        } else {
-          // Pause animations when not visible
-          animatedElements.forEach((el) => {
-            el.style.animationPlayState = "paused";
-          });
-          entry.target.classList.add("animations-paused");
-        }
-      });
-    },
-    {
-      root: null,
-      rootMargin: "100px", // Start animations slightly before visible
-      threshold: 0,
-    },
-  );
-
-  animatedSections.forEach((section) => {
-    if (section) animationObserver.observe(section);
-  });
 });

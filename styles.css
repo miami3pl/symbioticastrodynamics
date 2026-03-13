@@ -23,8 +23,8 @@
   /* Text Hierarchy */
   --color-text: #f0f0f5;
   --color-text-secondary: #a1a1aa;
-  --color-text-muted: #71717a;
-  --color-text-subtle: #3f3f46;
+  --color-text-muted: #8b8b96;
+  --color-text-subtle: #5a5a63;
 
   /* Accent Colors */
   --color-primary: #3b82f6;
@@ -112,6 +112,7 @@ body {
   right: 0;
   z-index: 1000;
   background: var(--color-bg-glass);
+  -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--color-border);
   overflow: visible;
@@ -761,9 +762,12 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 40px;
+  height: 40px;
   border: 1px solid;
   border-radius: 50%;
   opacity: 0;
+  will-change: transform, opacity;
   animation: energy-expand 4s ease-out infinite;
 }
 
@@ -784,15 +788,11 @@ body {
 
 @keyframes energy-expand {
   0% {
-    width: 40px;
-    height: 40px;
-    margin: -20px 0 0 -20px;
+    transform: translate(-50%, -50%) scale(1);
     opacity: 0.8;
   }
   100% {
-    width: 400px;
-    height: 400px;
-    margin: -200px 0 0 -200px;
+    transform: translate(-50%, -50%) scale(10);
     opacity: 0;
   }
 }
@@ -947,10 +947,10 @@ body {
   left: 50%;
   width: 60px;
   height: 60px;
-  margin: -30px 0 0 -30px;
   border: 2px solid var(--color-electric);
   border-radius: 50%;
   opacity: 0;
+  will-change: transform, opacity;
   animation: em-burst 4s ease-out infinite;
   box-shadow:
     0 0 20px var(--color-electric-glow),
@@ -967,9 +967,7 @@ body {
 
 @keyframes em-burst {
   0% {
-    width: 60px;
-    height: 60px;
-    margin: -30px 0 0 -30px;
+    transform: translate(-50%, -50%) scale(1);
     opacity: 0.9;
     border-width: 3px;
   }
@@ -978,9 +976,7 @@ body {
     border-width: 2px;
   }
   100% {
-    width: 500px;
-    height: 500px;
-    margin: -250px 0 0 -250px;
+    transform: translate(-50%, -50%) scale(8.33);
     opacity: 0;
     border-width: 1px;
   }
@@ -1164,6 +1160,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 4px;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -1728,7 +1725,7 @@ body {
   color: var(--color-electric);
 }
 
-.capability-text h4 {
+.capability-text h3 {
   font-size: 16px;
   font-weight: 600;
   color: var(--color-text);
@@ -1896,7 +1893,7 @@ body {
   margin-bottom: 12px;
 }
 
-.founder-card h4 {
+.founder-card h3 {
   font-size: 24px;
   font-weight: 700;
   color: var(--color-text);
@@ -2064,7 +2061,7 @@ body {
   color: var(--color-primary-bright);
 }
 
-.mission-text h4 {
+.mission-text h3 {
   font-size: 20px;
   font-weight: 600;
   color: var(--color-text);
@@ -2338,7 +2335,7 @@ body {
   height: 100%;
 }
 
-.material-card h4 {
+.material-card h3 {
   font-size: 16px;
   font-weight: 600;
   color: var(--color-text);
@@ -2464,7 +2461,7 @@ body {
   opacity: 1;
 }
 
-.research-card h4 {
+.research-card h3 {
   font-size: 16px;
   font-weight: 600;
   color: var(--color-accent-bright);
@@ -2548,7 +2545,7 @@ body {
   background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
 }
 
-.academic-contact h4 {
+.academic-contact h3 {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 12px;
@@ -2833,7 +2830,7 @@ body {
   color: var(--color-electric);
 }
 
-.geoem-card h4 {
+.geoem-card h3 {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 12px;
@@ -2900,7 +2897,7 @@ body {
   color: var(--color-electric);
 }
 
-.proprietary-header h4 {
+.proprietary-header h3 {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-text);
@@ -3263,7 +3260,7 @@ body {
     padding: 28px;
   }
 
-  .material-card h4 {
+  .material-card h3 {
     font-size: 17px;
   }
 
@@ -3304,7 +3301,7 @@ body {
     padding: 24px;
   }
 
-  .research-card h4 {
+  .research-card h3 {
     font-size: 17px;
   }
 
@@ -3330,7 +3327,7 @@ body {
     align-items: center;
   }
 
-  .academic-contact h4 {
+  .academic-contact h3 {
     font-size: 18px;
   }
 
@@ -3351,7 +3348,7 @@ body {
     padding: 24px;
   }
 
-  .geoem-card h4 {
+  .geoem-card h3 {
     font-size: 17px;
   }
 
@@ -3396,7 +3393,7 @@ body {
     padding: 20px;
   }
 
-  .capability-text h4 {
+  .capability-text h3 {
     font-size: 17px;
   }
 
@@ -3453,7 +3450,7 @@ body {
     margin: 0 auto;
   }
 
-  .mission-text h4 {
+  .mission-text h3 {
     text-align: center;
     font-size: 18px;
   }
@@ -3558,7 +3555,7 @@ body {
     padding: 24px;
   }
 
-  .founder-card h4 {
+  .founder-card h3 {
     font-size: 20px;
   }
 
@@ -3746,6 +3743,7 @@ body {
   right: 0;
   flex-direction: column;
   background: var(--color-bg-glass);
+  -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
   padding: 24px;
   padding-left: calc(24px + var(--safe-area-inset-left));
