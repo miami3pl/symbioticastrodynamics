@@ -1,6 +1,5 @@
 /* TEAM */
-Founder: Yuri Petrini
-Contact: yuri@symbioticastrodynamics.com
+Contact: research@symbioticastrodynamics.com
 Location: 929 Division Street, Biloxi, MS 39530
 
 /* SITE */

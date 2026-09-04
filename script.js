@@ -250,7 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `Name: ${name}\nEmail: ${email}\nOrganization: ${company || "N/A"}\nInquiry Type: ${inquiry || "Not specified"}\n\n${message}`,
       );
 
-      window.location.href = `mailto:yuri@symbioticastrodynamics.com?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:contact@symbioticastrodynamics.com?subject=${subject}&body=${body}`;
 
       const submitBtn = form.querySelector('button[type="submit"]');
       submitBtn.textContent = "Opening email client...";
